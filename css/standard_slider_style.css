@@ -1,0 +1,160 @@
+.slider-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 940px;
+    height: 358px;
+}
+
+.slider-holder {
+    overflow: hidden;
+    width: 940px;
+    display: block;
+    height: 358px;
+}
+
+.slider-holder li {
+    display: block;
+    width: 940px;
+    height: 358px;
+    list-style: none;
+    color: #000;
+}
+
+.slider-holder ul ul {
+    height: auto;
+}
+
+.slider-holder li li {
+    display: list-item;
+    width: auto;
+    height: auto;
+    float: none;
+    list-style: disc;
+}
+
+.s-active {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.standard_slider_slider {
+    position: relative;
+}
+
+.active_arrow {
+    visibility: visible;
+}
+
+.back-button {
+    float: left;
+    position: absolute;
+    left: 0px;
+    top: 140px;
+    /*font-size: 40px;*/
+    text-decoration: none;
+
+}
+
+#backButton{
+    background-image: url('../images/arrows%20left.png');
+    background-repeat: no-repeat;
+    width:50px;
+    height: 73px;
+    background-size: 50px;
+    margin-left: -7px;
+}
+
+#nextButton{
+    background-image: url('../images/arrow-right.png');
+    background-repeat: no-repeat;
+    width:50px;
+    height: 73px;
+    background-size: 50px;
+    margin-right: -7px;
+}
+
+.back-button a{
+
+
+}
+
+.back-button i {
+    color: #666666;
+    visibility: hidden;
+}
+
+.next-button {
+    float: right;
+    right: 0px;
+    top: 140px;
+    position: absolute;
+    color: #666666;
+    font-size: 40px;
+}
+
+.next-button i {
+    color: #666666;
+    visibility: hidden;
+}
+
+.standard_slider_image img{
+    width: 940px;
+    height:358px;
+}
+
+.slider-nav {
+    width: 275px;
+    float: right;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+
+}
+
+.slider-nav > .active{
+    background-color: #333333;
+    opacity: 1;
+}
+
+.slider-nav > li{
+    line-height: 70px;
+    text-align: left;
+    vertical-align: middle;
+    background-color: #5f6062;
+    margin-bottom: 2px;
+    position:relative;
+    opacity: 0.8;
+}
+
+.slider-nav > li >a{
+    color: white;
+    padding-left: 10px;
+    text-decoration: none;
+}
+
+.slider-arrow-left{
+    position: absolute;
+    left:-10px;
+    top:20px;
+    font-size: 30px;
+    vertical-align: middle;
+    color: #333333;
+    visibility: hidden;
+}
+
+.active_arrow{
+    visibility: visible;
+}
+
+.StandardSlider {
+    position: relative;
+}
+
+
+.slider_shadow {
+    background: url(../images/shadow-slider-4.png) no-repeat;
+    background-size: 940px;
+    line-height: 47px;
+}
+
