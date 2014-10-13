@@ -5,24 +5,26 @@
 <h3>Administration</h3>
 
 <?php
-$postId="";
+$postId = "";
 if (isset($_POST['Add_New_Slider'])) {
     $optional = array();
     show_slider_form($optional);
+} elseif (isset($_POST['update_image'])) {
+    update_slider_image_details();
+    show_slider_form(array("postId" => $_POST['edit_post_id']));
 } elseif (isset($_POST['save-slider-settings'])) {
     add_slider();
     show_slider_list();
-} elseif (isset($_POST['deleteImage'])) {
-    delete_slider_image($_POST['manage_slider_image']);
-    show_slider_form(array("postId" => $_POST['post_id']));
+} elseif (isset($_POST['delete_image'])) {
+    delete_slider_image($_POST['edit_id']);
+    show_slider_form(array("postId" => $_POST['edit_post_id']));
 } elseif (isset($_POST['delete_slider'])) {
     delete_slider($_POST['manage_slider']);
     show_slider_list();
 } elseif (isset($_POST['edit_slider'])) {
     $optional = array("postId" => $_POST['manage_slider']);
     show_slider_form($optional);
-}
-elseif (isset($_POST['attachment_id']) && isset($_POST['post_id'])) {
+} elseif (isset($_POST['attachment_id']) && isset($_POST['post_id'])) {
     associate_image_as_attachment($_POST['attachment_id'], $_POST['post_id']);
     $optional = array("postId" => $_POST['post_id']);
     show_slider_form($optional);
@@ -105,12 +107,12 @@ function show_slider_list()
 function show_slider_form($optional)
 {
     $post = null;
-    $hide_add_image_button="hide";
-    if ((isset($optional["postId"])) && ($optional["postId"]!="")) {
+    $hide_add_image_button = "hide";
+    if ((isset($optional["postId"])) && ($optional["postId"] != "")) {
         $post = get_post($optional["postId"]);
         $title = $post->post_title;
         $content = $post->post_content;
-        $hide_add_image_button="";
+        $hide_add_image_button = "";
     } else {
         $title = "";
         $content = "";
@@ -128,7 +130,10 @@ function show_slider_form($optional)
                 <td><input type="text" id="slider_desc" name="slider_desc" value=" <?php echo $content ?>"/></td>
 
             <tr>
-                <td colspan="2"><?php submit_button('Save Settings', 'primary', 'save-slider-settings'); ?></td>
+                <td colspan="2">
+                    <input type="submit" name="save-slider-settings" id="save-slider-settings" class="button" value="Save Settings">
+                    <input type="button" id="addSliderImage" name="addSliderImage" value="Add New Image"
+                           class="button <? echo $hide_add_image_button ?>"/></td>
             </tr>
             <?php
             if ($post != null) {
@@ -143,33 +148,52 @@ function show_slider_form($optional)
                         ?>
                         <tr>
                             <td colspan="2">
-                                <table class="edit_slider_image_list_table">
-                                    <tr>
-                                        <td><?php echo wp_get_attachment_image($attachment_id, 'full'); ?></td>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td>Title</td>
-                                                    <td><?php echo $attachment->post_title?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Caption</td>
-                                                    <td><?php echo $attachment->post_excerpt?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Description</td>
-                                                    <td><?php echo $attachment->post_content?></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <input id="manage_slider_image" type="radio" name="manage_slider_image"
-                                                   value=<?php echo($attachment_id)?>/>
-                                        </td>
-                                    </tr>
-                                </table>
 
-
+                                <form method="post">
+                                    <input type="hidden" name="edit_post_id" value="<?php echo $optional["postId"] ?>"
+                                           id="edit_post_id"/>
+                                    <input type="hidden" name="edit_id" id="edit_id"
+                                           value='<?php echo($attachment_id) ?>'/>
+                                    <table class="edit_slider_image_list_table">
+                                        <tr>
+                                            <td><?php echo wp_get_attachment_image($attachment_id, 'full'); ?></td>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td>Title</td>
+                                                        <td><input type="text"
+                                                                   name="title_<?php echo($attachment_id) ?>"
+                                                                   id="title_<?php echo($attachment_id) ?>"
+                                                                   value="<?php echo $attachment->post_title ?>"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Caption</td>
+                                                        <td><input type="text"
+                                                                   name="caption_<?php echo($attachment_id) ?>"
+                                                                   id="caption_<?php echo($attachment_id) ?>"
+                                                                   value="<?php echo $attachment->post_excerpt ?>"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Description</td>
+                                                        <td><input type="text" name="desc_<?php echo($attachment_id) ?>"
+                                                                   id="desc_<?php echo($attachment_id) ?>"
+                                                                   value="<?php echo $attachment->post_content ?>"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <input type="submit" value="Update Image Details" class="button"
+                                                       name="update_image"/>
+                                                <input type="submit" value="Delete Image" class="button"
+                                                       name="delete_image"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
                             </td>
                         </tr>
                     <?php
@@ -182,8 +206,7 @@ function show_slider_form($optional)
                 <td colspan="2">
                     <input type="hidden" name="post_id" value="<?php echo $optional["postId"] ?>" id="post_id"/>
                     <input type="hidden" name="attachment_id" id="attachment_id"/>
-                    <input type="button" id="addSliderImage" name="addSliderImage" value="Add New Image" class="button <?echo $hide_add_image_button?>"/>
-                    <input type="submit" id="deleteImage" name="deleteImage" value="Delete Image" class="button <?echo $hide_add_image_button?>"/>
+
                 </td>
             </tr>
         </table>
@@ -193,8 +216,8 @@ function show_slider_form($optional)
 
 function add_slider()
 {
-    if ((isset($_POST['post_id']))&&($_POST['post_id']!="")) {
-        wp_update_post(array('ID' => str_replace("/","",$_POST['post_id']),
+    if ((isset($_POST['post_id'])) && ($_POST['post_id'] != "")) {
+        wp_update_post(array('ID' => str_replace("/", "", $_POST['post_id']),
             'post_title' => $_POST['slider_name'],
             'post_content' => $_POST['slider_desc']));
     } else {
@@ -208,6 +231,14 @@ function add_slider()
         ));
     }
 
+}
+
+function update_slider_image_details()
+{
+    wp_update_post(array('ID' => str_replace("/", "", $_POST['edit_id']),
+        'post_title' => $_POST['title_' . $_POST['edit_id']],
+        'post_excerpt' => $_POST['caption_' . $_POST['edit_id']],
+        'post_content' => $_POST['desc_' . $_POST['edit_id']]));
 }
 
 function associate_image_as_attachment($image_id, $slider_id)
